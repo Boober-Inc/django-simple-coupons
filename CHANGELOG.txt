@@ -4,6 +4,11 @@ django-simple-coupons
 CHANGELOG:
 ----------
 
+v0.6:
+    - Using f-strings
+    - Admin optimizations
+    - `validate_allowed_users_rule` optimization
+
 v0.5:
     - Creating useful actions for the Coupon and CouponUser admins
     - Adding coupon.get_discounted_value(initial_value=<int/float>) method

@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 def get_coupon_code_length(length=12):
-    return settings.DSC_COUPON_CODE_LENGTH if hasattr(settings, 'DSC_COUPON_CODE_LENGTH') else length
+    return getattr(settings, 'DSC_COUPON_CODE_LENGTH', length)
 
 
 def get_user_model():

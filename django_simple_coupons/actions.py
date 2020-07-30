@@ -1,13 +1,17 @@
 from django.contrib.admin import ModelAdmin
 from django.utils import timezone
 
+from django_simple_coupons.models import CouponUser
 
-# Create your actions here
-# ========================
+
 def reset_coupon_usage(modeladmin, request, queryset):
+    to_update = []
     for coupon_user in queryset:
-        coupon_user.times_used = 0
-        coupon_user.save()
+        if coupon_user.times_used > 0:
+            coupon_user.times_used = 0
+            to_update.append(coupon_user)
+
+    CouponUser.objects.bulk_update(to_update, fields=['times_used'], batch_size=500)
 
     ModelAdmin.message_user(modeladmin, request, "Coupons reseted!")
 
@@ -20,7 +24,7 @@ def delete_expired_coupons(modeladmin, request, queryset):
             coupon.delete()
             count += 1
 
-    ModelAdmin.message_user(modeladmin, request, "{0} Expired coupons deleted!".format(count))
+    ModelAdmin.message_user(modeladmin, request, f"{count} Expired coupons deleted!")
 
 
 # Actions short descriptions

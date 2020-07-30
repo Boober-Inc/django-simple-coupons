@@ -1,6 +1,7 @@
-from django_simple_coupons.models import Coupon, CouponUser
 from django.utils import timezone
 
+from django_simple_coupons.models import Coupon
+from django_simple_coupons.models import CouponUser
 
 INVALID_TEMPLATE = {
     "valid": False,
@@ -20,10 +21,10 @@ def assemble_invalid_message(message=""):
 
 def validate_allowed_users_rule(coupon_object, user):
     allowed_users_rule = coupon_object.ruleset.allowed_users
-    if not user in allowed_users_rule.users.all():
-        return False if not allowed_users_rule.all_users else True
+    if allowed_users_rule.all_users:
+        return True
 
-    return True
+    return user in allowed_users_rule.users.all()
 
 
 def validate_max_uses_rule(coupon_object, user):
@@ -57,7 +58,7 @@ def validate_coupon(coupon_code, user):
         return assemble_invalid_message(message="No user provided!")
 
     try:
-        coupon_object = Coupon.objects.get(code=coupon_code)
+        coupon_object = Coupon.objects.get(code__iexact=coupon_code)
     except Coupon.DoesNotExist:
         return assemble_invalid_message(message="Coupon does not exist!")
 
