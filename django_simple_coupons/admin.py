@@ -41,20 +41,7 @@ class AllowedUsersRuleAdmin(admin.ModelAdmin):
         'users',
     )
 
-    def get_model_perms(self, request):
-        return {}
-
-
-@admin.register(MaxUsesRule)
-class MaxUsesRuleAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
-
-
-@admin.register(ValidityRule)
-class ValidityRuleAdmin(admin.ModelAdmin):
-    def get_model_perms(self, request):
-        return {}
-
 
 admin.site.register(Discount)
+admin.site.register(MaxUsesRule)
+admin.site.register(ValidityRule)
