@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 def get_coupon_code_length(length=12):
-    return getattr(settings, 'DSC_COUPON_CODE_LENGTH', length)
+    return min(getattr(settings, 'DSC_COUPON_CODE_LENGTH', length), 100)
 
 
 def get_user_model():

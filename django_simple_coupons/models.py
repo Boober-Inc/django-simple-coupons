@@ -89,10 +89,9 @@ class Discount(models.Model):
 
 
 class Coupon(models.Model):
-    code_length = get_coupon_code_length()
-
-    code = models.CharField(max_length=code_length, default=get_random_code, verbose_name="Coupon Code", unique=True)
+    code = models.CharField(max_length=100, default=get_random_code, verbose_name="Coupon Code", unique=True)
     discount = models.ForeignKey('Discount', on_delete=models.CASCADE)
+    description = models.TextField(blank=True, null=True, default='')
     times_used = models.IntegerField(default=0, editable=False, verbose_name="Times used")
     created = models.DateTimeField(editable=False, verbose_name="Created", auto_now_add=True)
 
@@ -102,7 +101,7 @@ class Coupon(models.Model):
         return self.code
 
     def use_coupon(self, user):
-        coupon_user, created = CouponUser.objects.get_or_create(user=user, coupon=self)
+        coupon_user, _ = CouponUser.objects.get_or_create(user=user, coupon=self)
         coupon_user.times_used = F('times_used') + 1
         coupon_user.save()
 
