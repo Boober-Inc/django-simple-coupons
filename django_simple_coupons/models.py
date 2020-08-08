@@ -105,7 +105,7 @@ class Coupon(models.Model):
         coupon_user.times_used = F('times_used') + 1
         coupon_user.save()
 
-        self.times_used = F('times_user') + 1
+        self.times_used = F('times_used') + 1
         self.save()
 
     def get_discount(self):
