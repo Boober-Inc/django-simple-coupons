@@ -12,7 +12,10 @@ class Ruleset(models.Model):
     validity = models.ForeignKey('ValidityRule', on_delete=models.CASCADE, verbose_name="Validity rule")
 
     def __str__(self):
-        return f"Ruleset Nº{self.pk}"
+        return (
+            f"Ruleset Nº{self.pk}, allowed users rule {self.allowed_users}, "
+            f"max user rule {self.max_uses}, validity rule {self.validity}"
+        )
 
     class Meta:
         verbose_name = "Ruleset"
@@ -26,7 +29,7 @@ class AllowedUsersRule(models.Model):
     all_users = models.BooleanField(default=False, verbose_name="All users?")
 
     def __str__(self):
-        return f"AllowedUsersRule Nº{self.pk}"
+        return f"AllowedUsersRule Nº{self.pk}, all_users: {self.all_users}"
 
     class Meta:
         verbose_name = "Allowed User Rule"
@@ -39,7 +42,10 @@ class MaxUsesRule(models.Model):
     uses_per_user = models.IntegerField(default=1, verbose_name="Uses per user")
 
     def __str__(self):
-        return f"MaxUsesRule Nº{self.pk}"
+        return (
+            f"MaxUsesRule Nº{self.pk}, uses {self.max_uses}, "
+            f"infinite {self.is_infinite}, uses per user {self.uses_per_user}"
+        )
 
     class Meta:
         verbose_name = "Max Uses Rule"
@@ -51,7 +57,7 @@ class ValidityRule(models.Model):
     is_active = models.BooleanField(default=False, verbose_name="Is active?")
 
     def __str__(self):
-        return f"ValidityRule Nº{self.pk}"
+        return f"ValidityRule Nº{self.pk}, is_active: {self.is_active}, expires: {self.expiration_date}"
 
     class Meta:
         verbose_name = "Validity Rule"
