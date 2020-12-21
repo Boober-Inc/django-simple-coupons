@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
             name='Coupon',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(default=django_simple_coupons.helpers.get_random_code, max_length=12, unique=True, verbose_name='Coupon Code')),
+                ('code', models.CharField(default=django_simple_coupons.helpers.get_random_code, max_length=100, unique=True, verbose_name='Coupon Code')),
                 ('times_used', models.IntegerField(default=0, editable=False, verbose_name='Times used')),
                 ('created', models.DateTimeField(editable=False, verbose_name='Created')),
             ],
