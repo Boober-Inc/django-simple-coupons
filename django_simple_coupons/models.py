@@ -70,6 +70,7 @@ class CouponUser(models.Model):
     user = models.ForeignKey(user_model, on_delete=models.CASCADE, verbose_name="User")
     coupon = models.ForeignKey('Coupon', on_delete=models.CASCADE, verbose_name="Coupon")
     times_used = models.IntegerField(default=0, editable=False, verbose_name="Times used")
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.user)
