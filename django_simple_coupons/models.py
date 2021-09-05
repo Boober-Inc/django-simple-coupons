@@ -10,11 +10,12 @@ class Ruleset(models.Model):
     allowed_users = models.ForeignKey('AllowedUsersRule', on_delete=models.CASCADE, verbose_name="Allowed users rule")
     max_uses = models.ForeignKey('MaxUsesRule', on_delete=models.CASCADE, verbose_name="Max uses rule")
     validity = models.ForeignKey('ValidityRule', on_delete=models.CASCADE, verbose_name="Validity rule")
+    min_price = models.ForeignKey('MinPriceRule', on_delete=models.CASCADE, verbose_name="Min Price rule")
 
     def __str__(self):
         return (
             f"Ruleset Nº{self.pk}, allowed users rule {self.allowed_users}, "
-            f"max user rule {self.max_uses}, validity rule {self.validity}"
+            f"max user rule {self.max_uses}, validity rule {self.validity}, min price rule {self.min_price}"
         )
 
     class Meta:
@@ -53,7 +54,8 @@ class MaxUsesRule(models.Model):
 
 
 class ValidityRule(models.Model):
-    expiration_date = models.DateTimeField(verbose_name="Expiration date")
+    expiration_date = models.DateTimeField(verbose_name="Expiration date", blank=True, null=True)
+    is_permanent = models.BooleanField(default=False, verbose_name="Is permanent?")
     is_active = models.BooleanField(default=False, verbose_name="Is active?")
 
     def __str__(self):
@@ -62,6 +64,18 @@ class ValidityRule(models.Model):
     class Meta:
         verbose_name = "Validity Rule"
         verbose_name_plural = "Validity Rules"
+
+
+class MinPriceRule(models.Model):
+    min_price = models.DecimalField(
+        verbose_name="Min order value", max_digits=8, decimal_places=2, default=0.0)
+
+    def __str__(self):
+        return f"MinPriceRule Nº{self.pk}, Min Price: {self.min_price}."
+
+    class Meta:
+        verbose_name = "Min Price Rule"
+        verbose_name_plural = "Min Price Rules"
 
 
 class CouponUser(models.Model):

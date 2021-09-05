@@ -18,6 +18,7 @@ def reset_coupon_usage(modeladmin, request, queryset):
 
 def delete_expired_coupons(modeladmin, request, queryset):
     count = 0
+    queryset = queryset.exclude(ruleset__validity__is_permanent=True)
     for coupon in queryset:
         expiration_date = coupon.ruleset.validity.expiration_date
         if timezone.now() >= expiration_date:

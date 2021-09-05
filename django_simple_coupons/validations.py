@@ -44,13 +44,24 @@ def validate_max_uses_rule(coupon_object, user):
 
 def validate_validity_rule(coupon_object):
     validity_rule = coupon_object.ruleset.validity
-    if timezone.now() > validity_rule.expiration_date:
+    if not validity_rule.is_permanent:
+        if validity_rule.expiration_date and timezone.now() < validity_rule.expiration_date:
+            return validity_rule.is_active
+
         return False
 
     return validity_rule.is_active
 
 
-def validate_coupon(coupon_code, user):
+def validate_min_price_rule(coupon_object, initial_value):
+    min_price_rule = coupon_object.ruleset.min_price
+    if initial_value <= min_price_rule.min_price:
+        return False
+
+    return True
+
+
+def validate_coupon(coupon_code, user, initial_value):
     if not coupon_code:
         return assemble_invalid_message(message="No coupon code provided!")
 
@@ -60,18 +71,23 @@ def validate_coupon(coupon_code, user):
     try:
         coupon_object = Coupon.objects.get(code__iexact=coupon_code)
     except Coupon.DoesNotExist:
-        return assemble_invalid_message(message="Coupon does not exist!")
+        return assemble_invalid_message(message="Hmm, that's not one of our codes. Please try again!")
 
     valid_allowed_users_rule = validate_allowed_users_rule(coupon_object=coupon_object, user=user)
     if not valid_allowed_users_rule:
-        return assemble_invalid_message(message="Invalid coupon for this user!")
+        return assemble_invalid_message(message="This Promo Code has already been used")
 
     valid_max_uses_rule = validate_max_uses_rule(coupon_object=coupon_object, user=user)
     if not valid_max_uses_rule:
-        return assemble_invalid_message(message="Coupon uses exceeded for this user!")
+        return assemble_invalid_message(message="This Promo Code has already been used")
 
     valid_validity_rule = validate_validity_rule(coupon_object=coupon_object)
     if not valid_validity_rule:
-        return assemble_invalid_message(message="Invalid coupon!")
+        return assemble_invalid_message(message="This Promo Code is no longer valid")
+
+    valid_min_price_rule = validate_min_price_rule(coupon_object=coupon_object, initial_value=initial_value)
+    if not valid_min_price_rule:
+        return assemble_invalid_message(message="You must spend more than ${} to use this code".format(
+            coupon_object.ruleset.min_price.min_price))
 
     return VALID_TEMPLATE

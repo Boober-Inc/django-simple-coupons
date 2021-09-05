@@ -9,20 +9,20 @@ from django_simple_coupons.models import Discount
 from django_simple_coupons.models import MaxUsesRule
 from django_simple_coupons.models import Ruleset
 from django_simple_coupons.models import ValidityRule
+from django_simple_coupons.models import MinPriceRule
 
 
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
     list_display = ('code', 'discount', 'ruleset', 'times_used', 'created',)
+    search_fields = ('code', )
+
     actions = [delete_expired_coupons]
 
 
 @admin.register(Ruleset)
 class RulesetAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'allowed_users', 'max_uses', 'validity',)
-    raw_id_fields = (
-        'allowed_users',
-    )
 
 
 @admin.register(CouponUser)
@@ -37,11 +37,10 @@ class CouponUserAdmin(admin.ModelAdmin):
 
 @admin.register(AllowedUsersRule)
 class AllowedUsersRuleAdmin(admin.ModelAdmin):
-    raw_id_fields = (
-        'users',
-    )
+    pass
 
 
 admin.site.register(Discount)
 admin.site.register(MaxUsesRule)
 admin.site.register(ValidityRule)
+admin.site.register(MinPriceRule)
